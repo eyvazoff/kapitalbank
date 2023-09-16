@@ -2,7 +2,7 @@
   "name": "kapitalbank",
   "version": "1.0.2",
   "description": "Kapitalbank Payment Gateway",
-  "main": "src/kapitalbank.ts",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p .",
     "test": "ts-node -r tsconfig-paths/register test.ts"

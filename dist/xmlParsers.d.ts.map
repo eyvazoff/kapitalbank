@@ -1,0 +1,1 @@
+{"version":3,"file":"xmlParsers.d.ts","sourceRoot":"","sources":["../src/xmlParsers.ts"],"names":[],"mappings":"AAEA,QAAA,MAAM,UAAU,gBAAiB,GAAG,YAAY,MAAM,YAAY,GAAG,KAAG,IAyBvE,CAAA;AAGD,QAAA,MAAM,gBAAgB,aAAc,MAAM,YAAY,GAAG,KAAG,IAiB3D,CAAA;AAGD,QAAA,MAAM,qBAAqB,aAAc,MAAM,YAAY,GAAG,KAAG,IA4ChE,CAAA;AAGD,OAAO,EACH,UAAU,EACV,gBAAgB,EAChB,qBAAqB,EACxB,CAAA"}

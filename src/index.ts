@@ -7,9 +7,9 @@ import {
     PaymentInstance,
     PaymentStatusInstance,
     PaymentInformationInstance
-} from "@src/interfaces";
-import {completionXml, createOrderXml, getOrderInformationXml, getOrderStatusXml, reverseXml} from "@src/xmlBuilders";
-import {paymentInformationObj, paymentObj, paymentStatusObj} from "@src/xmlParsers";
+} from "./interfaces";
+import {completionXml, createOrderXml, getOrderInformationXml, getOrderStatusXml, reverseXml} from "./xmlBuilders";
+import {paymentInformationObj, paymentObj, paymentStatusObj} from "./xmlParsers";
 
 class KapitalBank {
     private readonly baseUrl: string;
