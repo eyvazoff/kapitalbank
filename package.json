@@ -1,0 +1,36 @@
+{
+  "name": "kapitalbank",
+  "version": "1.0.1",
+  "description": "Kapitalbank Payment Gateway",
+  "main": "src/kapitalbank.ts",
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "ts-node -r tsconfig-paths/register test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eyvazoff/kapitalbank.git"
+  },
+  "keywords": [
+    "kapitalbank",
+    "payment",
+    "gateway"
+  ],
+  "author": "eyvazoff",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eyvazoff/kapitalbank/issues"
+  },
+  "homepage": "https://github.com/eyvazoff/kapitalbank#readme",
+  "dependencies": {
+    "axios": "^1.5.0",
+    "ts-node": "^10.7.0",
+    "tsconfig-paths": "^4.0.0",
+    "typescript": "^4.6.4",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.6.0",
+    "@types/xml2js": "^0.4.12"
+  }
+}

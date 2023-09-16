@@ -1,0 +1,12 @@
+dist
+.idea/
+.env
+.vscode
+node_modules
+src/**/*.js
+src/**/*.js.map
+test.*
+*.log
+/logs
+package-lock.json
+certs
