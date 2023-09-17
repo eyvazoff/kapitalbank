@@ -14,8 +14,8 @@ The KapitalBank Payment Integration library is a Node.js module that facilitates
     - [Reverse a Transaction](#reverse-a-transaction)
     - [Get Order Status](#get-order-status)
     - [Get Order Information](#get-order-information)
-5. [Configuration](#configuration)
-6. [License](#license)
+5. [License](#license)
+6. [Disclaimer](#disclaimer)
 
 ## Introduction
 
@@ -51,13 +51,29 @@ const kb = new KapitalBank({
    approveUrl: "APPROVE_URL",
    cancelUrl: "CANCEL_URL",
    declineUrl: "DECLINE_URL",
-   liveMode: false,  // Set to true for live mode, false for test mode
-   certFilePath: "CERT_FILE_PATH",  // Path to your SSL certificate file
-   keyFilePath: "KEY_FILE_PATH",  // Path to your SSL key file
-   defaultLanguage: "EN",  // Default language (optional, defaults to 'EN'),
-   currency: "944" // Default currency (optional, default to '944')
+   liveMode: false,
+   certFilePath: "CERT_FILE_PATH",
+   keyFilePath: "KEY_FILE_PATH",
+   defaultLanguage: "EN",
+   currency: "944"
 });
 ```
+
+### Configuration parameters
+
+The `KapitalBank` class can be configured by passing appropriate values to its constructor. The available configuration options are:
+
+- `merchantId`: Your merchant ID.
+- `approveUrl`: The URL where successful payments will be redirected.
+- `cancelUrl`: The URL where canceled payments will be redirected.
+- `declineUrl`: The URL where declined payments will be redirected.
+- `liveMode`: Set to `true` for live mode, `false` for test mode.
+- `certFilePath`: The path to your SSL certificate file.
+- `keyFilePath`: The path to your SSL key file.
+- `defaultLanguage`: The default language for orders (optional, defaults to 'EN').
+- `currency`: The default currency for orders (optional, defaults to '944').
+
+Ensure that you provide the correct values for your environment.
 
 ## Create an Order
 
@@ -196,22 +212,6 @@ Response:
 }
 
 ```
-
-## Configuration
-
-The `KapitalBank` class can be configured by passing appropriate values to its constructor. The available configuration options are:
-
-- `merchantId`: Your merchant ID.
-- `approveUrl`: The URL where successful payments will be redirected.
-- `cancelUrl`: The URL where canceled payments will be redirected.
-- `declineUrl`: The URL where declined payments will be redirected.
-- `liveMode`: Set to `true` for live mode, `false` for test mode.
-- `certFilePath`: The path to your SSL certificate file.
-- `keyFilePath`: The path to your SSL key file.
-- `defaultLanguage`: The default language for orders (optional, defaults to 'EN').
-- `currency`: The default currency for orders (optional, defaults to '944').
-
-Ensure that you provide the correct values for your environment.
 
 ## License
 
