@@ -46,16 +46,17 @@ Import the `KapitalBank` class and initialize it with the required parameters:
 ```javascript
 const KapitalBank = require('kapitalbank');
 
-const kb = new KapitalBank(
-    "YOUR_MERCHANT_ID",
-    "APPROVE_URL",
-    "CANCEL_URL",
-    "DECLINE_URL",
-    true,  // Set to true for live mode, false for test mode
-    "CERT_FILE_PATH",  // Path to your SSL certificate file
-    "KEY_FILE_PATH",  // Path to your SSL key file
-    "EN"   // Default language (optional, defaults to 'EN')
-);
+const kb = new KapitalBank({
+   merchantId: "YOUR_MERCHANT_ID",
+   approveUrl: "APPROVE_URL",
+   cancelUrl: "CANCEL_URL",
+   declineUrl: "DECLINE_URL",
+   liveMode: false,  // Set to true for live mode, false for test mode
+   certFilePath: "CERT_FILE_PATH",  // Path to your SSL certificate file
+   keyFilePath: "KEY_FILE_PATH",  // Path to your SSL key file
+   defaultLanguage: "EN"   // Default language (optional, defaults to 'EN'),
+   currency: "944" // Default currency (optional, default to '944')
+});
 ```
 
 ## Create an Order
@@ -64,7 +65,7 @@ Use the `createOrder` method to create a new payment order:
 
 ```javascript
 const amount = 100;
-const description = "Sample Order";
+const description = "ORDER_DESCRIPTION";
 const preAuth = false;
 
 const orderResult = await kb.createOrder(amount, description, preAuth);
@@ -80,7 +81,7 @@ Response:
       "amount": 100,
       "orderId": "ORDER_ID",
       "sessionId": "SESSION_ID",
-      "description": "Sample Order",
+      "description": "ORDER_DESCRIPTION",
       "currency": 944,
       "lang": "EN",
       "paymentUrl": "https://tstpg.kapitalbank.az/index.jsp?ORDERID=ORDER_ID&SESSIONID=SESSION_ID",
@@ -176,7 +177,7 @@ Response:
       "amount": 100,
       "currency": "944",
       "orderLanguage": "EN",
-      "description": "Sample Order",
+      "description": "ORDER_DESCRIPTION",
       "approveUrl": "APPROVE_URL",
       "cancelUrl": "CANCEL_URL",
       "declineUrl": "DECLINE_URL",

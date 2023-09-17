@@ -28,15 +28,17 @@ class KapitalBank {
     private paymentInformationInstance: PaymentInformationInstance | null = null;
 
     constructor(
-        merchantId: string,
-        approveUrl: string,
-        cancelUrl: string,
-        declineUrl: string,
-        liveMode: boolean = false,
-        certFilePath: string = './certs/test.crt',
-        keyFilePath: string = './certs/test.key',
-        defaultLanguage: string = 'EN',
-        currency: number = 944
+        {
+            merchantId,
+            approveUrl,
+            cancelUrl,
+            declineUrl,
+            liveMode = false,
+            certFilePath = './certs/test.crt',
+            keyFilePath = './certs/test.key',
+            defaultLanguage = 'EN',
+            currency = 944
+        }: any
     ) {
         this.liveMode = liveMode
         this.baseUrl = this.liveMode ? 'https://3dsrv.kapitalbank.az' : 'https://tstpg.kapitalbank.az';
