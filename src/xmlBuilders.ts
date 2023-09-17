@@ -20,8 +20,7 @@ const createOrderXml = (data: any, approveUrl: string, cancelUrl: string, declin
 
 
 const getOrderStatusXml = (data: any): string => {
-    return `
-    <?xml version="1.0" encoding="UTF-8"?>
+    return `<?xml version="1.0" encoding="UTF-8"?>
         <TKKPG>
             <Request>
                 <Operation>GetOrderStatus</Operation>
@@ -32,8 +31,7 @@ const getOrderStatusXml = (data: any): string => {
                 </Order>
                 <SessionID>${data.sessionId}</SessionID>
             </Request>
-        </TKKPG>
-    `;
+        </TKKPG>`;
 }
 
 
@@ -54,19 +52,19 @@ const getOrderInformationXml = (data: any): string => {
 
 const completionXml = (data: any): string => {
     return `<?xml version="1.0" encoding="UTF-8"?>
-    <TKKPG>
-        <Request>
-            <Operation>Completion</Operation>
-            <Language>${data.lang}</Language>
-            <Order>
-                <Merchant>${data.merchant}</Merchant>
-                <OrderID>${data.orderId}</OrderID>
-            </Order>
-            <SessionID>${data.sessionId}</SessionID>
-            <Amount>${data.amount}</Amount>
-            <Description>${data.description}</Description>
-        </Request>
-    </TKKPG>`;
+<TKKPG>
+      <Request>
+              <Operation>Completion</Operation>
+              <Language>${data.lang}</Language>
+              <Order>
+                    <Merchant>${data.merchant}</Merchant>
+                    <OrderID>${data.orderId}</OrderID>
+              </Order>
+              <SessionID> ${data.sessionId} </SessionID>
+              <Amount>${data.amount}</Amount>
+              <Description> ${data.description}</Description>
+      </Request>
+</TKKPG>`;
 }
 
 const reverseXml = (merchantId: string, data: any): string => {

@@ -8,8 +8,8 @@ import {
     PaymentStatusInstance,
     PaymentInformationInstance
 } from "./interfaces";
-import {completionXml, createOrderXml, getOrderInformationXml, getOrderStatusXml, reverseXml} from "./xmlBuilders";
-import {paymentInformationObj, paymentObj, paymentStatusObj} from "./xmlParsers";
+import {createOrderXml, completionXml, reverseXml, getOrderStatusXml, getOrderInformationXml} from "./xmlBuilders";
+import {completePaymentObj, paymentInformationObj, paymentObj, paymentStatusObj, reversePaymentObj} from "./xmlParsers";
 
 class KapitalBank {
     private readonly baseUrl: string;
@@ -22,6 +22,7 @@ class KapitalBank {
     private readonly declineUrl: string;
     private readonly liveMode: boolean;
     private readonly defaultLanguage: string;
+    private readonly currency: number;
     private paymentInstance: PaymentInstance | null = null;
     private paymentStatusInstance: PaymentStatusInstance | null = null;
     private paymentInformationInstance: PaymentInformationInstance | null = null;
@@ -34,7 +35,8 @@ class KapitalBank {
         liveMode: boolean = false,
         certFilePath: string = './certs/test.crt',
         keyFilePath: string = './certs/test.key',
-        defaultLanguage: string = 'EN'
+        defaultLanguage: string = 'EN',
+        currency: number = 944
     ) {
         this.liveMode = liveMode
         this.baseUrl = this.liveMode ? 'https://3dsrv.kapitalbank.az' : 'https://tstpg.kapitalbank.az';
@@ -46,6 +48,7 @@ class KapitalBank {
         this.cancelUrl = cancelUrl;
         this.declineUrl = declineUrl;
         this.defaultLanguage = defaultLanguage
+        this.currency = currency
     }
 
     private async post(data: string): Promise<string> {
@@ -56,129 +59,100 @@ class KapitalBank {
                 cert: fs.readFileSync(this.certFile),
                 key: fs.readFileSync(this.keyFile)
             }),
-        };
-
+        }
 
         const response: AxiosResponse = await axios.post(
             `${this.baseUrl}:${this.port}/Exec`,
             data,
             headers
-        );
-
+        )
         return response.data;
     }
 
-    getPayment(): PaymentInstance | null {
-        return this.paymentInstance;
-    }
 
-    getPaymentStatus(): PaymentStatusInstance | null {
-        return this.paymentStatusInstance;
-    }
-
-    getPaymentInformation(): PaymentInformationInstance | null {
-        return this.paymentInformationInstance;
-    }
-
-    async createOrder(
-        amount: number,
-        currency: number = 944,
-        description: string,
-        lang: string = this.defaultLanguage,
-        preAuth: boolean = false
-    ): Promise<PaymentInstance | null> {
+    async createOrder(amount: number, description: string, preAuth: boolean = false) {
         const orderData: any = {
             merchant: this.merchantId,
             amount,
-            currency,
+            currency: this.currency,
             description,
-            lang,
+            lang: this.defaultLanguage,
             orderType: preAuth ? 'PreAuth' : 'Purchase',
         };
         const xmlData = createOrderXml(orderData, this.approveUrl, this.cancelUrl, this.declineUrl);
         const result = await this.post(xmlData);
-        paymentObj(orderData, result, (response: any) => {
+        await paymentObj(orderData, result, (response: any) => {
             this.paymentInstance = response
         })
-        return this.getPayment();
+        return this.paymentInstance;
     }
 
     async completeOrder(
         orderId: number,
         sessionId: string,
         amount: number,
-        description: string,
-        lang: string = this.defaultLanguage
-    ): Promise<string> {
+        description: string
+    ) {
         const orderData: any = {
             merchant: this.merchantId,
             orderId,
             sessionId,
             amount,
             description,
-            lang,
+            lang: this.defaultLanguage,
         };
         const xmlData: string = completionXml(orderData);
         const result: string = await this.post(xmlData);
-        const responseXml = await xml2js.parseStringPromise(result);
-        return responseXml.TKKPG.Response.Status;
+        await completePaymentObj(result, this.defaultLanguage, (response: any) => {
+            console.log(response)
+        })
+        return result;
     }
 
-    async reverseOrder(
-        orderId: number,
-        sessionId: string,
-        description: string,
-        lang: string = this.defaultLanguage
-    ): Promise<string> {
+    async reverseOrder(orderId: number, sessionId: string, description: string) {
         const orderData: any = {
             merchant: this.merchantId,
             orderId,
             sessionId,
-            lang,
-            description,
+            lang: this.defaultLanguage,
+            description
         };
         const xmlData: string = reverseXml(this.merchantId, orderData);
         const result: string = await this.post(xmlData);
-        const responseXml = await xml2js.parseStringPromise(result);
-        return responseXml.TKKPG.Response.Status;
+        await reversePaymentObj(result, this.defaultLanguage, (response: any) => {
+            console.log(response)
+        })
+        return result;
     }
 
-    async getOrderStatus(
-        orderId: number,
-        sessionId: string,
-        lang: string = this.defaultLanguage
-    ): Promise<PaymentStatusInstance | null> {
+    async getOrderStatus(orderId: number, sessionId: string) {
         const orderData: any = {
             merchant: this.merchantId,
             orderId,
             sessionId,
-            lang,
+            lang: this.defaultLanguage
         };
         const xmlData: string = getOrderStatusXml(orderData);
         const result: string = await this.post(xmlData);
-        paymentStatusObj(result, (response: any) => {
+        paymentStatusObj(result, this.defaultLanguage, (response: any) => {
             this.paymentStatusInstance = response
         })
-        return this.getPaymentStatus();
+        return this.paymentStatusInstance;
     }
 
-    async getOrderInformation(
-        orderId: number,
-        sessionId: string,
-        lang: string = this.defaultLanguage
-    ) {
+    async getOrderInformation(orderId: number, sessionId: string) {
         const orderData: any = {
             merchant: this.merchantId,
             orderId,
             sessionId,
-            lang,
+            lang: this.defaultLanguage
         };
         const xmlData: string = getOrderInformationXml(orderData);
         const result: string = await this.post(xmlData);
-        paymentInformationObj(result, (response: any) => {
+        paymentInformationObj(result, this.defaultLanguage, (response: any) => {
             this.paymentInformationInstance = response
         })
-        return this.getPaymentInformation();
+        return this.paymentInformationInstance;
     }
 }
 

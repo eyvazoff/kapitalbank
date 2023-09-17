@@ -41,15 +41,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var axios_1 = __importDefault(require("axios"));
 var fs_1 = __importDefault(require("fs"));
 var https_1 = __importDefault(require("https"));
-var xml2js_1 = __importDefault(require("xml2js"));
 var xmlBuilders_1 = require("./xmlBuilders");
 var xmlParsers_1 = require("./xmlParsers");
 var KapitalBank = /** @class */ (function () {
-    function KapitalBank(merchantId, approveUrl, cancelUrl, declineUrl, liveMode, certFilePath, keyFilePath, defaultLanguage) {
+    function KapitalBank(merchantId, approveUrl, cancelUrl, declineUrl, liveMode, certFilePath, keyFilePath, defaultLanguage, currency) {
         if (liveMode === void 0) { liveMode = false; }
         if (certFilePath === void 0) { certFilePath = './certs/test.crt'; }
         if (keyFilePath === void 0) { keyFilePath = './certs/test.key'; }
         if (defaultLanguage === void 0) { defaultLanguage = 'EN'; }
+        if (currency === void 0) { currency = 944; }
         this.paymentInstance = null;
         this.paymentStatusInstance = null;
         this.paymentInformationInstance = null;
@@ -63,6 +63,7 @@ var KapitalBank = /** @class */ (function () {
         this.cancelUrl = cancelUrl;
         this.declineUrl = declineUrl;
         this.defaultLanguage = defaultLanguage;
+        this.currency = currency;
     }
     KapitalBank.prototype.post = function (data) {
         return __awaiter(this, void 0, void 0, function () {
@@ -86,18 +87,7 @@ var KapitalBank = /** @class */ (function () {
             });
         });
     };
-    KapitalBank.prototype.getPayment = function () {
-        return this.paymentInstance;
-    };
-    KapitalBank.prototype.getPaymentStatus = function () {
-        return this.paymentStatusInstance;
-    };
-    KapitalBank.prototype.getPaymentInformation = function () {
-        return this.paymentInformationInstance;
-    };
-    KapitalBank.prototype.createOrder = function (amount, currency, description, lang, preAuth) {
-        if (currency === void 0) { currency = 944; }
-        if (lang === void 0) { lang = this.defaultLanguage; }
+    KapitalBank.prototype.createOrder = function (amount, description, preAuth) {
         if (preAuth === void 0) { preAuth = false; }
         return __awaiter(this, void 0, void 0, function () {
             var orderData, xmlData, result;
@@ -108,27 +98,28 @@ var KapitalBank = /** @class */ (function () {
                         orderData = {
                             merchant: this.merchantId,
                             amount: amount,
-                            currency: currency,
+                            currency: this.currency,
                             description: description,
-                            lang: lang,
+                            lang: this.defaultLanguage,
                             orderType: preAuth ? 'PreAuth' : 'Purchase'
                         };
                         xmlData = (0, xmlBuilders_1.createOrderXml)(orderData, this.approveUrl, this.cancelUrl, this.declineUrl);
                         return [4 /*yield*/, this.post(xmlData)];
                     case 1:
                         result = _a.sent();
-                        (0, xmlParsers_1.paymentObj)(orderData, result, function (response) {
-                            _this.paymentInstance = response;
-                        });
-                        return [2 /*return*/, this.getPayment()];
+                        return [4 /*yield*/, (0, xmlParsers_1.paymentObj)(orderData, result, function (response) {
+                                _this.paymentInstance = response;
+                            })];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/, this.paymentInstance];
                 }
             });
         });
     };
-    KapitalBank.prototype.completeOrder = function (orderId, sessionId, amount, description, lang) {
-        if (lang === void 0) { lang = this.defaultLanguage; }
+    KapitalBank.prototype.completeOrder = function (orderId, sessionId, amount, description) {
         return __awaiter(this, void 0, void 0, function () {
-            var orderData, xmlData, result, responseXml;
+            var orderData, xmlData, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -138,24 +129,25 @@ var KapitalBank = /** @class */ (function () {
                             sessionId: sessionId,
                             amount: amount,
                             description: description,
-                            lang: lang
+                            lang: this.defaultLanguage
                         };
                         xmlData = (0, xmlBuilders_1.completionXml)(orderData);
                         return [4 /*yield*/, this.post(xmlData)];
                     case 1:
                         result = _a.sent();
-                        return [4 /*yield*/, xml2js_1["default"].parseStringPromise(result)];
+                        return [4 /*yield*/, (0, xmlParsers_1.completePaymentObj)(result, this.defaultLanguage, function (response) {
+                                console.log(response);
+                            })];
                     case 2:
-                        responseXml = _a.sent();
-                        return [2 /*return*/, responseXml.TKKPG.Response.Status];
+                        _a.sent();
+                        return [2 /*return*/, result];
                 }
             });
         });
     };
-    KapitalBank.prototype.reverseOrder = function (orderId, sessionId, description, lang) {
-        if (lang === void 0) { lang = this.defaultLanguage; }
+    KapitalBank.prototype.reverseOrder = function (orderId, sessionId, description) {
         return __awaiter(this, void 0, void 0, function () {
-            var orderData, xmlData, result, responseXml;
+            var orderData, xmlData, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -163,23 +155,24 @@ var KapitalBank = /** @class */ (function () {
                             merchant: this.merchantId,
                             orderId: orderId,
                             sessionId: sessionId,
-                            lang: lang,
+                            lang: this.defaultLanguage,
                             description: description
                         };
                         xmlData = (0, xmlBuilders_1.reverseXml)(this.merchantId, orderData);
                         return [4 /*yield*/, this.post(xmlData)];
                     case 1:
                         result = _a.sent();
-                        return [4 /*yield*/, xml2js_1["default"].parseStringPromise(result)];
+                        return [4 /*yield*/, (0, xmlParsers_1.reversePaymentObj)(result, this.defaultLanguage, function (response) {
+                                console.log(response);
+                            })];
                     case 2:
-                        responseXml = _a.sent();
-                        return [2 /*return*/, responseXml.TKKPG.Response.Status];
+                        _a.sent();
+                        return [2 /*return*/, result];
                 }
             });
         });
     };
-    KapitalBank.prototype.getOrderStatus = function (orderId, sessionId, lang) {
-        if (lang === void 0) { lang = this.defaultLanguage; }
+    KapitalBank.prototype.getOrderStatus = function (orderId, sessionId) {
         return __awaiter(this, void 0, void 0, function () {
             var orderData, xmlData, result;
             var _this = this;
@@ -190,22 +183,21 @@ var KapitalBank = /** @class */ (function () {
                             merchant: this.merchantId,
                             orderId: orderId,
                             sessionId: sessionId,
-                            lang: lang
+                            lang: this.defaultLanguage
                         };
                         xmlData = (0, xmlBuilders_1.getOrderStatusXml)(orderData);
                         return [4 /*yield*/, this.post(xmlData)];
                     case 1:
                         result = _a.sent();
-                        (0, xmlParsers_1.paymentStatusObj)(result, function (response) {
+                        (0, xmlParsers_1.paymentStatusObj)(result, this.defaultLanguage, function (response) {
                             _this.paymentStatusInstance = response;
                         });
-                        return [2 /*return*/, this.getPaymentStatus()];
+                        return [2 /*return*/, this.paymentStatusInstance];
                 }
             });
         });
     };
-    KapitalBank.prototype.getOrderInformation = function (orderId, sessionId, lang) {
-        if (lang === void 0) { lang = this.defaultLanguage; }
+    KapitalBank.prototype.getOrderInformation = function (orderId, sessionId) {
         return __awaiter(this, void 0, void 0, function () {
             var orderData, xmlData, result;
             var _this = this;
@@ -216,16 +208,16 @@ var KapitalBank = /** @class */ (function () {
                             merchant: this.merchantId,
                             orderId: orderId,
                             sessionId: sessionId,
-                            lang: lang
+                            lang: this.defaultLanguage
                         };
                         xmlData = (0, xmlBuilders_1.getOrderInformationXml)(orderData);
                         return [4 /*yield*/, this.post(xmlData)];
                     case 1:
                         result = _a.sent();
-                        (0, xmlParsers_1.paymentInformationObj)(result, function (response) {
+                        (0, xmlParsers_1.paymentInformationObj)(result, this.defaultLanguage, function (response) {
                             _this.paymentInformationInstance = response;
                         });
-                        return [2 /*return*/, this.getPaymentInformation()];
+                        return [2 /*return*/, this.paymentInformationInstance];
                 }
             });
         });

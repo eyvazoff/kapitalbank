@@ -6,7 +6,7 @@ var createOrderXml = function (data, approveUrl, cancelUrl, declineUrl) {
 };
 exports.createOrderXml = createOrderXml;
 var getOrderStatusXml = function (data) {
-    return "\n    <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n        <TKKPG>\n            <Request>\n                <Operation>GetOrderStatus</Operation>\n                <Language>".concat(data.lang, "</Language>\n                <Order>\n                    <Merchant>").concat(data.merchant, "</Merchant>\n                    <OrderID>").concat(data.orderId, "</OrderID>\n                </Order>\n                <SessionID>").concat(data.sessionId, "</SessionID>\n            </Request>\n        </TKKPG>\n    ");
+    return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n        <TKKPG>\n            <Request>\n                <Operation>GetOrderStatus</Operation>\n                <Language>".concat(data.lang, "</Language>\n                <Order>\n                    <Merchant>").concat(data.merchant, "</Merchant>\n                    <OrderID>").concat(data.orderId, "</OrderID>\n                </Order>\n                <SessionID>").concat(data.sessionId, "</SessionID>\n            </Request>\n        </TKKPG>");
 };
 exports.getOrderStatusXml = getOrderStatusXml;
 var getOrderInformationXml = function (data) {
@@ -14,7 +14,7 @@ var getOrderInformationXml = function (data) {
 };
 exports.getOrderInformationXml = getOrderInformationXml;
 var completionXml = function (data) {
-    return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n    <TKKPG>\n        <Request>\n            <Operation>Completion</Operation>\n            <Language>".concat(data.lang, "</Language>\n            <Order>\n                <Merchant>").concat(data.merchant, "</Merchant>\n                <OrderID>").concat(data.orderId, "</OrderID>\n            </Order>\n            <SessionID>").concat(data.sessionId, "</SessionID>\n            <Amount>").concat(data.amount, "</Amount>\n            <Description>").concat(data.description, "</Description>\n        </Request>\n    </TKKPG>");
+    return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<TKKPG>\n      <Request>\n              <Operation>Completion</Operation>\n              <Language>".concat(data.lang, "</Language>\n              <Order>\n                    <Merchant>").concat(data.merchant, "</Merchant>\n                    <OrderID>").concat(data.orderId, "</OrderID>\n              </Order>\n              <SessionID> ").concat(data.sessionId, " </SessionID>\n              <Amount>").concat(data.amount, "</Amount>\n              <Description> ").concat(data.description, "</Description>\n      </Request>\n</TKKPG>");
 };
 exports.completionXml = completionXml;
 var reverseXml = function (merchantId, data) {

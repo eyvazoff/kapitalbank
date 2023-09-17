@@ -46,78 +46,154 @@ Import the `KapitalBank` class and initialize it with the required parameters:
 ```javascript
 const KapitalBank = require('kapitalbank');
 
-const kapitalBank = new KapitalBank(
-    'YOUR_MERCHANT_ID',
-    'APPROVE_URL',
-    'CANCEL_URL',
-    'DECLINE_URL',
+const kb = new KapitalBank(
+    "YOUR_MERCHANT_ID",
+    "APPROVE_URL",
+    "CANCEL_URL",
+    "DECLINE_URL",
     true,  // Set to true for live mode, false for test mode
-    './certs/test.crt',  // Path to your SSL certificate file
-    './certs/test.key',  // Path to your SSL key file
-    'EN'   // Default language (optional, defaults to 'EN')
+    "CERT_FILE_PATH",  // Path to your SSL certificate file
+    "KEY_FILE_PATH",  // Path to your SSL key file
+    "EN"   // Default language (optional, defaults to 'EN')
 );
 ```
 
-### Create an Order
+## Create an Order
 
 Use the `createOrder` method to create a new payment order:
 
 ```javascript
 const amount = 100;
-const description = 'Sample Order';
-const lang = 'EN';
+const description = "Sample Order";
 const preAuth = false;
 
-const orderResult = await kapitalBank.createOrder(amount, description, lang, preAuth);
-console.log('Result', orderResult);
+const orderResult = await kb.createOrder(amount, description, preAuth);
+console.log(orderResult);
 ```
 
-### Complete an Order
+Response:
+
+```json
+{
+   "success": true,
+   "data": {
+      "amount": 100,
+      "orderId": "ORDER_ID",
+      "sessionId": "SESSION_ID",
+      "description": "Sample Order",
+      "currency": 944,
+      "lang": "EN",
+      "paymentUrl": "https://tstpg.kapitalbank.az/index.jsp?ORDERID=ORDER_ID&SESSIONID=SESSION_ID",
+      "orderType": "ORDER_TYPE" //Purchase or PreAuth
+   }
+}
+```
+
+## Complete an Order
 
 Complete a payment order using the `completeOrder` method:
 
 ```javascript
-const orderId = 12345;  // Replace with your order ID
-const sessionId = 'SESSION_ID';  // Replace with your session ID
+const orderId = "ORDER_ID";  // Replace with your order ID
+const sessionId = "SESSION_ID";  // Replace with your session ID
 
-const completionResult = await kapitalBank.completeOrder(orderId, sessionId, amount, description, lang);
-console.log('Completion Result:', completionResult);
+const completionResult = await kb.completeOrder(orderId, sessionId, amount, description, lang);
+console.log(completionResult);
 ```
 
-### Reverse a Transaction
+## Reverse a Transaction
 
 Reverse a payment transaction with the `reverseOrder` method:
 
 ```javascript
-const orderId = 12345;  // Replace with your order ID
-const sessionId = 'SESSION_ID';  // Replace with your session ID
+const orderId = "ORDER_ID";  // Replace with your order ID
+const sessionId = "SESSION_ID";  // Replace with your session ID
 
-const reversalResult = await kapitalBank.reverseOrder(orderId, sessionId, description, lang);
-console.log('Reversal Result:', reversalResult);
+const reversalResult = await kb.reverseOrder(orderId, sessionId, description, lang);
+console.log(reversalResult);
 ```
 
-### Get Order Status
+Response: 
+```json
+{
+  "success": true,
+  "data": { 
+     "orderId": 662685, 
+     "respCode": "", 
+     "respMessage": ""
+  }
+}
+
+```
+
+## Get Order Status
 
 Retrieve the status of a payment order using the `getOrderStatus` method:
 
 ```javascript
-const orderId = 12345;  // Replace with your order ID
-const sessionId = 'SESSION_ID';  // Replace with your session ID
+const orderId = "ORDER_ID";  // Replace with your order ID
+const sessionId = "SESSION_ID";  // Replace with your session ID
 
-const status = await kapitalBank.getOrderStatus(orderId, sessionId, lang);
-console.log('Order Status:', status);
+const status = await kb.getOrderStatus(orderId, sessionId, lang);
+console.log(status);
 ```
 
-### Get Order Information
+Response:
+```json
+{
+   "success": true,
+   "data": {
+      "orderId": "ORDER_ID",
+      "orderStatus": "ORDER_STATUS"
+   }
+}
+
+```
+
+## Get Order Information
 
 Obtain detailed information about a payment order with the `getOrderInformation` method:
 
 ```javascript
-const orderId = 12345;  // Replace with your order ID
-const sessionId = 'SESSION_ID';  // Replace with your session ID
+const orderId = "ORDER_ID";  // Replace with your order ID
+const sessionId = "SESSION_ID";  // Replace with your session ID
 
-const info = await kapitalBank.getOrderInformation(orderId, sessionId, lang);
-console.log('Order Information:', info);
+const info = await kb.getOrderInformation(orderId, sessionId, lang);
+console.log(info);
+```
+
+Response: 
+```json
+{
+   "success": true,
+   "data": {
+      "orderId": "ORDER_ID",
+      "orderStatus": "ORDER_STATUS",
+      "sessionId": "SESSION_ID",
+      "createDate": "2023-09-17T09:39:05.000Z",
+      "lastUpdateDate": null,
+      "payDate": null,
+      "amount": 100,
+      "currency": "944",
+      "orderLanguage": "EN",
+      "description": "Sample Order",
+      "approveUrl": "APPROVE_URL",
+      "cancelUrl": "CANCEL_URL",
+      "declineUrl": "DECLINE_URL",
+      "receipt": "",
+      "twoId": "",
+      "refundAmount": "",
+      "refundCurrency": null,
+      "refundDate": null,
+      "extSystemProcess": "0",
+      "orderType": "Purchase",
+      "orderSubType": "",
+      "fee": 0,
+      "TWODate": "",
+      "TWOTime": ""
+   }
+}
+
 ```
 
 ## Configuration
@@ -132,6 +208,7 @@ The `KapitalBank` class can be configured by passing appropriate values to its c
 - `certFilePath`: The path to your SSL certificate file.
 - `keyFilePath`: The path to your SSL key file.
 - `defaultLanguage`: The default language for orders (optional, defaults to 'EN').
+- `currency`: The default currency for orders (optional, defaults to '944').
 
 Ensure that you provide the correct values for your environment.
 
