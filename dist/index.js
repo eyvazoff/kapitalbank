@@ -44,12 +44,8 @@ var https_1 = __importDefault(require("https"));
 var xmlBuilders_1 = require("./xmlBuilders");
 var xmlParsers_1 = require("./xmlParsers");
 var KapitalBank = /** @class */ (function () {
-    function KapitalBank(merchantId, approveUrl, cancelUrl, declineUrl, liveMode, certFilePath, keyFilePath, defaultLanguage, currency) {
-        if (liveMode === void 0) { liveMode = false; }
-        if (certFilePath === void 0) { certFilePath = './certs/test.crt'; }
-        if (keyFilePath === void 0) { keyFilePath = './certs/test.key'; }
-        if (defaultLanguage === void 0) { defaultLanguage = 'EN'; }
-        if (currency === void 0) { currency = 944; }
+    function KapitalBank(_a) {
+        var merchantId = _a.merchantId, approveUrl = _a.approveUrl, cancelUrl = _a.cancelUrl, declineUrl = _a.declineUrl, _b = _a.liveMode, liveMode = _b === void 0 ? false : _b, _c = _a.certFilePath, certFilePath = _c === void 0 ? './certs/test.crt' : _c, _d = _a.keyFilePath, keyFilePath = _d === void 0 ? './certs/test.key' : _d, _e = _a.defaultLanguage, defaultLanguage = _e === void 0 ? 'EN' : _e, _f = _a.currency, currency = _f === void 0 ? 944 : _f;
         this.paymentInstance = null;
         this.paymentStatusInstance = null;
         this.paymentInformationInstance = null;

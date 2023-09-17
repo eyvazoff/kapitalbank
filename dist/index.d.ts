@@ -14,7 +14,7 @@ declare class KapitalBank {
     private paymentInstance;
     private paymentStatusInstance;
     private paymentInformationInstance;
-    constructor(merchantId: string, approveUrl: string, cancelUrl: string, declineUrl: string, liveMode?: boolean, certFilePath?: string, keyFilePath?: string, defaultLanguage?: string, currency?: number);
+    constructor({ merchantId, approveUrl, cancelUrl, declineUrl, liveMode, certFilePath, keyFilePath, defaultLanguage, currency }: any);
     private post;
     createOrder(amount: number, description: string, preAuth?: boolean): Promise<PaymentInstance | null>;
     completeOrder(orderId: number, sessionId: string, amount: number, description: string): Promise<string>;
