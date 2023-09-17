@@ -54,7 +54,7 @@ const kb = new KapitalBank({
    liveMode: false,  // Set to true for live mode, false for test mode
    certFilePath: "CERT_FILE_PATH",  // Path to your SSL certificate file
    keyFilePath: "KEY_FILE_PATH",  // Path to your SSL key file
-   defaultLanguage: "EN"   // Default language (optional, defaults to 'EN'),
+   defaultLanguage: "EN",  // Default language (optional, defaults to 'EN'),
    currency: "944" // Default currency (optional, default to '944')
 });
 ```
@@ -85,7 +85,7 @@ Response:
       "currency": 944,
       "lang": "EN",
       "paymentUrl": "https://tstpg.kapitalbank.az/index.jsp?ORDERID=ORDER_ID&SESSIONID=SESSION_ID",
-      "orderType": "ORDER_TYPE" //Purchase or PreAuth
+      "orderType": "ORDER_TYPE"
    }
 }
 ```
