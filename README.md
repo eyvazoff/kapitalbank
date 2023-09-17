@@ -34,7 +34,7 @@ Before using this library, ensure you have the following prerequisites:
 To use the KapitalBank Payment Integration library in your Node.js project, you need to install it via npm. Open a terminal and run the following command:
 
 ```bash
-npm install kapitalbank
+npm install kapitalbank@latest
 ```
 
 ## Usage
