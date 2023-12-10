@@ -220,3 +220,7 @@ This library is released under the MIT License. See the [LICENSE](LICENSE) file 
 ## Disclaimer
 
 This library is not officially maintained or endorsed by KapitalBank. Use it at your own risk.
+
+## Buy Cofe
+
+https://kofe.al/en/@eyvazoff
